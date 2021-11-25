@@ -42,11 +42,11 @@ rm -rf src
 
 # Fill "setup.ini" file with "user=admin" value
 cd module
-echo $'user=admin\n' > setup.ini
+echo 'user=admin' > setup.ini
 setup_ini_content=$(cat setup.ini)
 
 # Print the content of the file from previous step for check and add a message about the file name before (A user always wants to be informed what's happening)
-echo "Following content has been added to setup.ini file:${txtred} $setup_ini_content ${txtrst}"
+echo -e "Following content has been added to setup.ini file:\n${txtred}$setup_ini_content ${txtrst}"
 
 # Count a number of the lines of the file mentioned in previous step and verify if it's equal to 1. If not, show a warning to user.
 number_of_lines=$(wc -l < setup.ini)
