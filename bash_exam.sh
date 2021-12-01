@@ -1,4 +1,3 @@
-# Set/Select this file as a bash/shell script - you must set a header of the file
 #!/bin/bash
 
 # Added color variables
@@ -41,7 +40,7 @@ mv src/main/module "$working_dir"
 rm -rf src
 
 # Fill "setup.ini" file with "user=admin" value
-cd module
+cd module || exit
 echo 'user=admin' > setup.ini
 setup_ini_content=$(cat setup.ini)
 
@@ -62,7 +61,7 @@ echo "Script is processing, please wait"
 sleep 5
 
 # Remove "module" folder with its content and inform a user about it
-cd "$working_dir"
+cd "$working_dir" || exit
 rm -rf module
 echo "${txtred}module${txtrst} folder has been removed"
 
