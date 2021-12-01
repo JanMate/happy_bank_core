@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # Added color variables
-txtrst=$(tput sgr0) 
-txtred=$(tput setaf 1)
+RED='\033[0;31m'
+NC='\033[0m'
 
 # Add announcement that this script has just started with timestamp
 echo "Script has started at $(date +%T)"
 
 # Create a new "working_dir" variable and set it as a current directory
 working_dir=$(pwd)
-echo "Current working directory: ${txtred} $working_dir ${txtrst}"
+echo -e "Current working directory: ${RED} $working_dir ${NC}"
 
 # In your working dir, create nested directory structure "src/main/module" (discover the -p argument in mkdir command)
 mkdir -p src/main/module
@@ -22,9 +22,9 @@ module_dir_list=$(ls -a src/main/module)
 
 # Check if the "module" directory is empty. If so or not, show a meaningful message about it
 if [[ -z "$module_dir_list" ]]; then
-	echo "${txtred}Module${txtrst} directory is empty"
+	echo -e "${RED}Module${NC} directory is empty"
 else 
-	echo "${txtred}Module${txtrst} directory is not empty"
+	echo -e "${RED}Module${NC} directory is not empty"
 fi 
 
 # In your working directory create a new empty file "setup.ini"
@@ -45,7 +45,7 @@ echo 'user=admin' > setup.ini
 setup_ini_content=$(cat setup.ini)
 
 # Print the content of the file from previous step for check and add a message about the file name before (A user always wants to be informed what's happening)
-echo -e "Following content has been added to setup.ini file:\n${txtred}$setup_ini_content ${txtrst}"
+echo -e "Following content has been added to setup.ini file:\n${RED}$setup_ini_content ${NC}"
 
 # Count a number of the lines of the file mentioned in previous step and verify if it's equal to 1. If not, show a warning to user.
 number_of_lines=$(wc -l < setup.ini)
@@ -63,7 +63,7 @@ sleep 5
 # Remove "module" folder with its content and inform a user about it
 cd "$working_dir" || exit
 rm -rf module
-echo "${txtred}module${txtrst} folder has been removed"
+echo -e "${RED}module${NC} folder has been removed"
 
 # Add announcement that this script has just finished with timestamp
 echo "Script ended at $(date +%T)"
