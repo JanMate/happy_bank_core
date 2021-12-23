@@ -2,18 +2,21 @@
 name = "happy-bank-core"
 version = "0.0.1"
 description = "A simple bank core app for mentoring purpose"
-authors = ["JanMate <JanMate@github.com>"]
+authors = [
+    "JanMate <JanMate@github.com>",
+    "Oleksandr6676 <Oleksandr6676@github.com>"
+]
+license = "MIT"
 
 [tool.semantic_release]
 version_variable = [
     "core/__init__.py:__version__",
-    "pyproject.toml:version"
 ]
-version_source="commit"
-commit_version_number=true
+version_toml = [
+    "pyproject.toml:tool.poetry.version"
+]
+version_source="tag"
 branch = "main"
-upload_to_pypi = false
-upload_to_release = true
 build_command = "pip install poetry && poetry build"
 
 [tool.poetry.dependencies]

@@ -16,6 +16,17 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
+  commitlint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Check conventional commits
+        uses: wagoid/commitlint-github-action@v2
+
   lint:
     runs-on: ubuntu-latest
 
@@ -59,7 +70,7 @@ jobs:
           version: "21.5b1"
 
   test:
-    needs: lint
+    needs: [ lint ]
 
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -98,7 +109,7 @@ jobs:
         run: python -m poetry run pytest -v tests/
 
   release:
-    needs: test
+    needs: [ lint, test ]
 
     runs-on: ubuntu-latest
 
@@ -109,6 +120,8 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Fetch main branch
         run: git fetch --prune origin +refs/heads/main:refs/remotes/origin/main
