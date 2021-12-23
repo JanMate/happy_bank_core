@@ -16,6 +16,8 @@ on:
 env:
   DOCKER_REGISTRY: hub.docker.com
   IMAGE_NAME: jmatejka/happy-bank-core
+  PYTHON_VERSION: 3.9
+  POETRY_VERSION: 1.1.2
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -43,12 +45,12 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install Python Poetry
         uses: abatilo/actions-poetry@v2.1.0
         with:
-          poetry-version: 1.1.2
+          poetry-version: ${{ env.POETRY_VERSION }}
 
       - name: Configure poetry
         shell: bash
@@ -93,12 +95,12 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install Python Poetry
         uses: abatilo/actions-poetry@v2.1.0
         with:
-          poetry-version: 1.1.2
+          poetry-version: ${{ env.POETRY_VERSION }}
 
       - name: Configure poetry
         shell: bash
@@ -125,7 +127,7 @@ jobs:
     steps:
       - uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Checkout code
         uses: actions/checkout@v2

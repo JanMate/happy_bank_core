@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM python:3.9
 
 LABEL description="A simple bank core app for mentoring purpose" \
       author="Oleksandr6676" \
