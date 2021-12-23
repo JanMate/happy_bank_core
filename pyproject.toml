@@ -17,10 +17,10 @@ version_toml = [
 ]
 version_source="tag"
 branch = "main"
-build_command = "pip install poetry && poetry install && poetry build"
+build_command = "pip install poetry && poetry env use 3.9 && poetry install && poetry build"
 
 [tool.poetry.dependencies]
-python = ">=3.8"
+python = ">=3.9"
 toml = "^0.10.1"
 Flask = "^2.0"
 click = "^8.0"
@@ -32,7 +32,7 @@ flake8 = "^3.8.3"
 
 [tool.black]
 line-length = 100
-target-version = ['py38']
+target-version = ['py39']
 
 [build-system]
 requires = ["poetry>=1.1.0"]
