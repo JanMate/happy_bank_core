@@ -26,7 +26,7 @@ WORKDIR /app
 
 # Add source code
 COPY pyproject.toml poetry.lock ./
-COPY core core
+COPY happy_bank_core core
 
 # Setup app deps
 RUN poetry install --no-dev --no-interaction --no-ansi
