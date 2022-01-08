@@ -65,7 +65,7 @@ jobs:
         uses: psf/black@stable
         with:
           options: "--check --diff --verbose"
-          src: "./core"
+          src: "./happy_bank_core"
           version: "21.5b1"
 
   test:

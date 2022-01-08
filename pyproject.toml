@@ -10,7 +10,7 @@ license = "MIT"
 
 [tool.semantic_release]
 version_variable = [
-    "core/__init__.py:__version__",
+    "happy_bank_core/__init__.py:__version__",
 ]
 version_toml = [
     "pyproject.toml:tool.poetry.version"
