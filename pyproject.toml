@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "happy-bank-core"
-version = "0.0.1"
+version = "0.2.0"
 description = "A simple bank core app for mentoring purpose"
 authors = [
     "JanMate <JanMate@github.com>",
