@@ -1,6 +1,6 @@
 FROM python:3.9
 
-LABEL description="A simple bank core app for mentoring purpose" \
+LABEL description="A simple bank core app for mentoring purposes" \
       author="Oleksandr6676" \
       contributor="JanMate" \
       app="happy-bank-core" \
@@ -25,7 +25,7 @@ RUN pip install --no-cache-dir --upgrade pip \
 WORKDIR /app
 
 # Add source code
-COPY pyproject.toml poetry.lock .
+COPY pyproject.toml poetry.lock ./
 COPY core core
 
 # Setup app deps
