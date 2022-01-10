@@ -144,6 +144,11 @@ jobs:
             && echo -n "new_version=${NEW_VERSION}" >> $GITHUB_ENV \
             || echo -n "new_version=dirty" >> $GITHUB_ENV
 
+      - name: Set git config due to git tag and push
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
       - name: Python Semantic Release - publish
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
