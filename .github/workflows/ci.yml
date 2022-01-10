@@ -151,8 +151,11 @@ jobs:
 
       - name: Python Semantic Release - publish
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          semantic-release publish
+        uses: relekang/python-semantic-release@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          repository_username: __token__
+          repository_password: ${{ secrets.PYPI_TOKEN }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
