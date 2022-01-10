@@ -12,8 +12,11 @@ ENV PYTHONUNBUFFERED=1 \
     USER_NAME=core
 
 # Create system user with less privileges than root
-RUN addgroup --gid 123 core \
-     && adduser --system --uid 1001 --group "${USER_NAME}"
+RUN addgroup --gid 123 "${USER_NAME}" \
+    && adduser --system --uid 1001 --group "${USER_NAME}" \
+    && mkdir /data \
+    && chown -R "${USER_NAME}":"${USER_NAME}" /data
+
 USER "${USER_NAME}"
 
 # Update path env var with path to user's binaries
