@@ -17,6 +17,15 @@ RUN addgroup --gid 123 "${USER_NAME}" \
     && mkdir /data \
     && chown -R "${USER_NAME}":"${USER_NAME}" /data
 
+WORKDIR /app
+
+# Add source code
+COPY pyproject.toml poetry.lock ./
+COPY happy_bank_core core
+
+# Set ownership of the core folder
+RUN chown -R "${USER_NAME}":"${USER_NAME}" ./core
+
 USER "${USER_NAME}"
 
 # Update path env var with path to user's binaries
@@ -25,12 +34,6 @@ ENV PATH="${PATH}:/home/${USER_NAME}/.local/bin"
 # Install poetry
 RUN pip install --no-cache-dir --upgrade pip \
     && curl -sSL "https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py" | python -
-
-WORKDIR /app
-
-# Add source code
-COPY pyproject.toml poetry.lock ./
-COPY happy_bank_core core
 
 # Setup app deps
 RUN poetry install --no-dev --no-interaction --no-ansi
