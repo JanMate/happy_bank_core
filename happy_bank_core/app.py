@@ -21,5 +21,10 @@ def transfer(sender, receiver, amount):
     return f"{sender} -> {receiver} ({amount})", 200
 
 
-if __name__ == "__main__":
+def main():
+    """Main method to run code as a module"""
     api.run(debug=True, host="0.0.0.0")
+
+
+if __name__ == "__main__":
+    main()

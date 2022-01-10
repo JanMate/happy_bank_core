@@ -19,6 +19,9 @@ version_source="tag"
 branch = "main"
 build_command = "pip install poetry && poetry env use 3.9 && poetry install && poetry build"
 
+[tool.poetry.scripts]
+happy-bank-core = 'happy_bank_core.app:main'
+
 [tool.poetry.dependencies]
 python = ">=3.9"
 toml = "^0.10.1"
