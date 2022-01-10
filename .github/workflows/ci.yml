@@ -139,7 +139,7 @@ jobs:
           echo "${NEW_VERSION}"
           [[ -n ${NEW_VERSION} ]] \
             && echo -n "new_version=${NEW_VERSION}" >> $GITHUB_ENV \
-            || echo -n "dirty" >> $GITHUB_ENV
+            || echo -n "new_version=dirty" >> $GITHUB_ENV
 
       - name: Python Semantic Release - publish
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
