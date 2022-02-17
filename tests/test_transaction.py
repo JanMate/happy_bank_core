@@ -1,12 +1,13 @@
-import unittest
 from happy_bank_core.logic.transaction import Transaction, TransactionException
 from happy_bank_core.logic.account import Account
-
-customer_1 = Account("id123", "John Doe", 100)
-customer_2 = Account("id321", "Johanna Doe", 300)
+import pytest
 
 
-class TestTransaction(unittest.TestCase):
+class TestTransaction:
+    def setup_method(self):
+        self.customer_john = Account("id123", "John Doe", 100)
+        self.customer_johanna = Account("id321", "Johanna Doe", 300)
+
     def test_insufficient_balance(self):
         """Tests if function returns false in case of insufficient balance"""
 
@@ -15,7 +16,7 @@ class TestTransaction(unittest.TestCase):
 
         # When
         amount = 200
-        result = Transaction.check_balance(customer_1, amount)
+        result = Transaction.check_balance(self.customer_john, amount)
 
         # Then
         assert result == expected
@@ -28,12 +29,12 @@ class TestTransaction(unittest.TestCase):
 
         # When
         amount = 100
-        result = Transaction.check_balance(customer_1, amount)
+        result = Transaction.check_balance(self.customer_john, amount)
 
         # Then
         assert result == expected
 
-    def test_zero_withdraw_amount(self):
+    def test_zero_transferred_amount(self):
         """Tests if function returns false if withdraw amount <= 0"""
 
         # Given
@@ -41,7 +42,7 @@ class TestTransaction(unittest.TestCase):
 
         # When
         amount = 0
-        result = Transaction.check_balance(customer_1, amount)
+        result = Transaction.check_balance(self.customer_john, amount)
 
         # Then
         assert result == expected
@@ -53,27 +54,27 @@ class TestTransaction(unittest.TestCase):
         transfer_amount = 0
 
         # then
-        self.assertRaises(
-            TransactionException, Transaction.transfer, customer_1, customer_2, transfer_amount
-        )
+        with pytest.raises(TransactionException):
+            Transaction.transfer(self.customer_john, self.customer_johanna, transfer_amount)
 
-    def test_transfer_exception_same_id(self):
+    def test_thrown_exception_if_sender_and_receiver_are_same(self):
         """Tests if transfer function throws exception when sender and recipient ids are the same"""
 
-        self.assertRaises(TransactionException, Transaction.transfer, customer_1, customer_1, 100)
+        # When
+        transfer_amount = 10
 
-    def test_transfer_returns_tuple(self):
+        # Then
+        with pytest.raises(TransactionException):
+            Transaction.transfer(self.customer_john, self.customer_john, transfer_amount)
+
+    def test_transfer_returns_tuple_if_sender_has_enough_money_and_differs_to_receiver(self):
         """Tests if transfer function returns a tuple"""
 
         # Given
-        expected_tuple = customer_1, customer_2
+        expected_tuple = self.customer_john, self.customer_johanna
 
         # When
-        result = Transaction.transfer(customer_1, customer_2, 100)
+        result = Transaction.transfer(self.customer_john, self.customer_johanna, 100)
 
         # Then
-        self.assertTupleEqual(expected_tuple, result)
-
-
-if __name__ == "__main__":
-    unittest.main()
+        assert expected_tuple == result
