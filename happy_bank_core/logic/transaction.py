@@ -14,7 +14,7 @@ class Transaction:
         return 0 < amount <= balance
 
     @staticmethod
-    def transfer(sender: Account, recipient: Account, amount: float) -> tuple | Exception:
+    def transfer(sender: Account, recipient: Account, amount: float) -> tuple:
         """Ensures transfer between 2 accounts"""
         if sender.id == recipient.id:
             raise TransactionException("Sender and recipient ids should have different values")
