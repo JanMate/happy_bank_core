@@ -3,10 +3,31 @@ Runs happy bank core app.
 
 Represents REST Api layer.
 """
-
+import logging
+import logging.config
 from flask import Flask
+from happy_bank_core.logic import account, transaction
+
+logging.config.fileConfig("../logging.conf")
+logger = logging.getLogger("root")
 
 api = Flask(__name__)
+
+
+@api.errorhandler(404)
+def page_not_found(e):
+    return "Sorry, we can’t find that page", 404
+
+
+@api.errorhandler(transaction.TransactionException)
+def handle_exception(e):
+    return f"Message: {e}", 400
+
+
+@api.route("/")
+def welcome_page():
+    """Returns welcome message"""
+    return "Welcome to Happy Bank", 200
 
 
 @api.route("/health")
@@ -16,9 +37,14 @@ def health():
 
 
 @api.route("/transfer/<sender>/<receiver>/<amount>")
-def transfer(sender, receiver, amount):
+def transfer(sender, receiver, amount: float):
     """Ensures transfer between 2 accounts of given money"""
-    return f"{sender} -> {receiver} ({amount})", 200
+    customer_john = account.Account(sender, "John Doe", 1000)
+    customer_johanna = account.Account(receiver, "Johanna Doe", 2000)
+    return (
+        f"{transaction.Transaction.transfer(customer_john, customer_johanna, float(amount))}",
+        200,
+    )
 
 
 def main():
