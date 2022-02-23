@@ -3,13 +3,12 @@ Runs happy bank core app.
 
 Represents REST Api layer.
 """
-import logging
 import logging.config
 from flask import Flask
 from happy_bank_core.logic import account, transaction
 
 logging.config.fileConfig("../logging.conf")
-logger = logging.getLogger("root")
+logger = logging.getLogger()
 
 api = Flask(__name__)
 
