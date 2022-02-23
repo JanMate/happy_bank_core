@@ -1,8 +1,6 @@
 from .account import Account
-import logging
 import logging.config
 
-logging.config.fileConfig("../logging.conf")
 logger = logging.getLogger("root")
 
 
@@ -38,4 +36,4 @@ class Transaction:
             f"Current {recipient.id} balance: {recipient.deposit};"
         )
         logger.info(confirmation_message)
-        return sender, recipient, confirmation_message
+        return sender, recipient
