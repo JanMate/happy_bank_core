@@ -1,7 +1,7 @@
 from .account import Account
 import logging.config
 
-logger = logging.getLogger("root")
+logger = logging.getLogger("transaction")
 
 
 class TransactionException(Exception):
