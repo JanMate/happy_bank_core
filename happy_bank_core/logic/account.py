@@ -9,8 +9,4 @@ class Account:
         self.deposit = balance
 
     def __repr__(self):
-        return json.dumps({
-            "id": self.id,
-            "name": self.name,
-            "deposit": self.deposit
-        })
+        return json.dumps({"id": self.id, "name": self.name, "deposit": self.deposit})
