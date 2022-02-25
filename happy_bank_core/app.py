@@ -42,10 +42,8 @@ def transfer(sender, receiver, amount: float):
     """Ensures transfer between 2 accounts of given money"""
     customer_john = account.Account(sender, "John Doe", 1000)
     customer_johanna = account.Account(receiver, "Johanna Doe", 2000)
-    customers = transaction.Transaction.transfer(customer_john, customer_johanna, float(amount))
-    print(f"{customers[0], customers[1]}")
     return (
-        f"{customers[0], customers[1]}",
+        f"{list(transaction.Transaction.transfer(customer_john, customer_johanna, float(amount)))}",
         200,
     )
 
