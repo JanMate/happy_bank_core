@@ -1,3 +1,6 @@
+import json
+
+
 class Account:
     def __init__(self, customer_id: str, full_name: str, balance: float):
         """Gets customer's data"""
@@ -5,5 +8,9 @@ class Account:
         self.name = full_name
         self.deposit = balance
 
-    def __str__(self):
-        return f"Customer ID: {self.id};\n Name: {self.name};\n " f"Balance: {self.deposit}"
+    def __repr__(self):
+        return json.dumps({
+            "id": self.id,
+            "name": self.name,
+            "deposit": self.deposit
+        })

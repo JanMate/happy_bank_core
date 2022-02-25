@@ -1,7 +1,8 @@
-from .account import Account
-import logging.config
+import logging
 
-logger = logging.getLogger("transaction")
+from .account import Account
+
+logger = logging.getLogger(__name__)
 
 
 class TransactionException(Exception):

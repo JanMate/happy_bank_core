@@ -3,12 +3,14 @@ Runs happy bank core app.
 
 Represents REST Api layer.
 """
-import logging.config
+import logging
 from flask import Flask
-from happy_bank_core.logic import account, transaction
 
-logging.config.fileConfig("../logging.conf")
-logger = logging.getLogger()
+from happy_bank_core.logic import account, transaction
+from happy_bank_core.config.log import setup_logging
+
+setup_logging()
+logger = logging.getLogger(__name__)
 
 api = Flask(__name__)
 
@@ -40,8 +42,10 @@ def transfer(sender, receiver, amount: float):
     """Ensures transfer between 2 accounts of given money"""
     customer_john = account.Account(sender, "John Doe", 1000)
     customer_johanna = account.Account(receiver, "Johanna Doe", 2000)
+    customers = transaction.Transaction.transfer(customer_john, customer_johanna, float(amount))
+    print(f"{customers[0], customers[1]}")
     return (
-        f"{transaction.Transaction.transfer(customer_john, customer_johanna, float(amount))}",
+        f"{customers[0], customers[1]}",
         200,
     )
 
