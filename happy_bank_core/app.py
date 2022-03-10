@@ -7,6 +7,7 @@ import logging
 from flask import Flask
 
 from happy_bank_core.logic import account, transaction
+from happy_bank_core.data import file_connector
 from happy_bank_core.config.log import setup_logging
 
 setup_logging()
@@ -40,12 +41,14 @@ def health():
 @api.route("/transfer/<sender>/<receiver>/<amount>")
 def transfer(sender, receiver, amount: float):
     """Ensures transfer between 2 accounts of given money"""
-    customer_john = account.Account(sender, "John Doe", 1000)
-    customer_johanna = account.Account(receiver, "Johanna Doe", 2000)
-    return (
-        f"{list(transaction.Transaction.transfer(customer_john, customer_johanna, float(amount)))}",
-        200,
+    customer_sender = file_connector.FileConnector.read(sender)
+    customer_receiver = file_connector.FileConnector.read(receiver)
+    updated_sender, updated_receiver = transaction.Transaction.transfer(
+        customer_sender, customer_receiver, float(amount)
     )
+    file_connector.FileConnector.update(updated_sender)
+    file_connector.FileConnector.update(updated_receiver)
+    return (f"{list((updated_sender, updated_receiver))}", 200)
 
 
 def main():
