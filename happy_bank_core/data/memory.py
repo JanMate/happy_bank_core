@@ -1,17 +1,17 @@
+"""Python module that contains MemoryConnector class"""
+import logging
+
 from happy_bank_core.data.connector import Connector
 from happy_bank_core.logic.account import Account
-import logging
 
 logger = logging.getLogger(__name__)
 
 
-class AccountNotFoundException(Exception):
-    def __init__(self, message):
-        super().__init__(message)
-
-
 class MemoryConnector(Connector):
+    """MemoryConnector class that inherits from parent Connector class"""
+
     def __init__(self):
+        super().__init__()
         self.accounts = {
             "id321": Account("id321", "Johan Doe", 1000),
             "id123": Account("id123", "John Doe", 1000),
@@ -19,13 +19,15 @@ class MemoryConnector(Connector):
         }
 
     def read(self, account_id):
+        """Returns account with specific account id"""
         try:
             logger.info(self.accounts[account_id])
             return self.accounts[account_id]
-        except KeyError:
-            raise AccountNotFoundException("Account not found")
+        except KeyError as err:
+            logger.error(err)
+            return None
 
     def update(self, account):
+        """Updates an existing account"""
         self.accounts[account.id] = account
-        logger.info(self.accounts)
-        return self.accounts
+        logger.info(self.accounts[account.id])

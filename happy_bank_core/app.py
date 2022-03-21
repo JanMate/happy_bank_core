@@ -6,8 +6,8 @@ Represents REST Api layer.
 import logging
 from flask import Flask
 
-from happy_bank_core.logic import account, transaction
-from happy_bank_core.data import file_connector
+from happy_bank_core.logic.transaction import Transaction, TransactionException
+from happy_bank_core.data.file_connector import FileConnector
 from happy_bank_core.config.log import setup_logging
 
 setup_logging()
@@ -17,13 +17,15 @@ api = Flask(__name__)
 
 
 @api.errorhandler(404)
-def page_not_found(e):
-    return "Sorry, we can’t find that page", 404
+def page_not_found(err):
+    """Handles 404 NotFound error"""
+    return f"Message: {err}", 404
 
 
-@api.errorhandler(transaction.TransactionException)
-def handle_exception(e):
-    return f"Message: {e}", 400
+@api.errorhandler(TransactionException)
+def handle_exception(err):
+    """Handles TransactionException"""
+    return f"Message: {err}", 400
 
 
 @api.route("/")
@@ -41,14 +43,15 @@ def health():
 @api.route("/transfer/<sender>/<receiver>/<amount>")
 def transfer(sender, receiver, amount: float):
     """Ensures transfer between 2 accounts of given money"""
-    customer_sender = file_connector.FileConnector.read(sender)
-    customer_receiver = file_connector.FileConnector.read(receiver)
-    updated_sender, updated_receiver = transaction.Transaction.transfer(
+    file_connector = FileConnector()
+    customer_sender = file_connector.read(sender)
+    customer_receiver = file_connector.read(receiver)
+    updated_sender, updated_receiver = Transaction.transfer(
         customer_sender, customer_receiver, float(amount)
     )
-    file_connector.FileConnector.update(updated_sender)
-    file_connector.FileConnector.update(updated_receiver)
-    return (f"{list((updated_sender, updated_receiver))}", 200)
+    file_connector.update(updated_sender)
+    file_connector.update(updated_receiver)
+    return f"{list((updated_sender, updated_receiver))}", 200
 
 
 def main():
