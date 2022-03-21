@@ -1,7 +1,9 @@
+"""Python Module that contains TestFileConnector class"""
+from unittest.mock import patch, mock_open
+
 from happy_bank_core.data.file_connector import FileConnector
 from happy_bank_core.logic.account import Account
-import pytest
-from unittest.mock import patch, mock_open
+
 
 READ_TEST_DATA = (
     '{"101": {"id": "101", "name": "John Doe", "deposit": 1000}, '
@@ -10,62 +12,73 @@ READ_TEST_DATA = (
 
 
 class TestFileConnector:
-    @patch("builtins.open", new_callable=mock_open, read_data=READ_TEST_DATA)
-    def test_if_read_function_returns_account_instance(self, mock_read):
-        """Tests if read function returns account instance"""
+    """Class that contains FileConnector unittests"""
 
-        # When
-        result = FileConnector.read("102")
-
-        # Then
-        mock_read.assert_called_once()
-        assert isinstance(result, Account)
+    def setup_method(self):
+        """Setup method that creates FileConnector class instance before each test case"""
+        self.file_connector = FileConnector()
 
     @patch("builtins.open", new_callable=mock_open, read_data=READ_TEST_DATA)
-    def test_if_read_func_return_account_with_correct_id(self, mock_read):
+    def test_if_read_func_return_account_with_correct_id(self, mocked_open):
         """Tests if read function returns account with correct ID"""
 
         # Given
         expected_id = "102"
 
         # When
-        result = FileConnector.read(expected_id)
+        result = self.file_connector.read(expected_id)
 
         # Then
-        mock_read.assert_called_once()
+        mocked_open.assert_called_once()
+        assert isinstance(result, Account)
         assert expected_id == result.id
 
     @patch("builtins.open", new_callable=mock_open, read_data=READ_TEST_DATA)
-    def test_if_read_function_throws_key_error(self, mock_read):
+    def test_if_read_function_throws_key_error(self, mocked_open):
         """Tests if read function throws KeyError exception"""
 
-        # Then
-        with pytest.raises(KeyError):
-            FileConnector.read("103")
-        mock_read.assert_called_once()
-
-    @patch("builtins.open", new_callable=mock_open, read_data=READ_TEST_DATA)
-    def test_if_read_func_throws_file_not_found_error(self, mock_read):
-        """Tests if read function throws FileNotFound exception"""
-
         # When
-        mock_read.side_effect = FileNotFoundError()
-        result = FileConnector.read("103")
+        mocked_open.side_effect = KeyError()
+        result = self.file_connector.read("101")
 
         # Then
-        mock_read.assert_called_once()
+        mocked_open.assert_called_once()
         assert not result
 
     @patch("builtins.open", new_callable=mock_open, read_data=READ_TEST_DATA)
-    def test_if_update_func_returns_updated_values(self, mock_read):
+    def test_if_read_func_throws_file_not_found_error(self, mocked_open):
+        """Tests if read function throws FileNotFound exception"""
+
+        # When
+        mocked_open.side_effect = FileNotFoundError()
+        result = self.file_connector.read("103")
+
+        # Then
+        mocked_open.assert_called_once()
+        assert not result
+
+    @patch("builtins.open", new_callable=mock_open, read_data=READ_TEST_DATA)
+    def test_if_read_func_permission_error(self, mocked_open):
+        """Tests if read function throws FileNotFound exception"""
+
+        # When
+        mocked_open.side_effect = PermissionError()
+        result = self.file_connector.read("103")
+
+        # Then
+        mocked_open.assert_called_once()
+        assert not result
+
+    @patch("builtins.open", new_callable=mock_open, read_data=READ_TEST_DATA)
+    def test_if_update_func_returns_updated_values(self, mocked_open):
         """Tests if update function returns updated data"""
 
         # Given
         account = Account("101", "John Doe", 2000)
 
         # When
-        result = FileConnector.update(account)
+        result = self.file_connector.update(account)
 
         # Then
         assert result != READ_TEST_DATA
-        mock_read.assert_called()
+        mocked_open.assert_called()
