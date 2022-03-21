@@ -23,9 +23,7 @@ class FileConnector(Connector):
                 data = json.load(customers)
                 logger.info(data[account_id])
                 return Account(
-                    data[account_id]["id"],
-                    data[account_id]["name"],
-                    data[account_id]["deposit"]
+                    data[account_id]["id"], data[account_id]["name"], data[account_id]["deposit"]
                 )
         except (FileNotFoundError, KeyError, PermissionError) as err:
             logger.error(err)
