@@ -13,7 +13,6 @@ class FileConnector(Connector):
     """FileConnector class that inherits from parent Connector class"""
 
     def __init__(self):
-        super().__init__()
         self.abs_path = os.path.abspath("data/customers.json")
 
     def read(self, account_id):
@@ -27,14 +26,18 @@ class FileConnector(Connector):
                 )
         except (FileNotFoundError, KeyError, PermissionError) as err:
             logger.error(err)
-            return None
+            raise err
 
     def update(self, account):
         """Updates an existing account"""
-        with open(self.abs_path, "r+", encoding="utf-8") as customers:
-            data = json.load(customers)
-            data[account.id] = account.__dict__
-            logger.info(data)
-        with open(self.abs_path, "w", encoding="utf-8") as customers:
-            json.dump(data, customers, indent=2)
-            return data
+        try:
+            with open(self.abs_path, "r+", encoding="utf-8") as customers:
+                data = json.load(customers)
+                data[account.id] = account.__dict__
+                logger.info(data)
+            with open(self.abs_path, "w", encoding="utf-8") as customers:
+                json.dump(data, customers, indent=2)
+                return data
+        except (FileNotFoundError, KeyError, PermissionError) as err:
+            logger.error(err)
+            raise err
