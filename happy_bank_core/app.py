@@ -4,6 +4,7 @@ Runs happy bank core app.
 Represents REST Api layer.
 """
 import logging
+import json
 from flask import Flask
 
 from happy_bank_core.logic.transaction import Transaction, TransactionException
@@ -16,16 +17,44 @@ logger = logging.getLogger(__name__)
 api = Flask(__name__)
 
 
+def compose_error_message(msg, status_code: int):
+    """Composes general error message"""
+    return json.dumps({"message": str(msg)}), status_code
+
+
 @api.errorhandler(404)
 def page_not_found(err):
     """Handles 404 NotFound error"""
-    return f"Message: {err}", 404
+    logger.error(err)
+    return compose_error_message(err, 404)
+
+
+@api.errorhandler(KeyError)
+def key_error(err):
+    """Handles KeyError"""
+    logger.error(err)
+    return compose_error_message("Invalid customer ID", 400)
+
+
+@api.errorhandler(PermissionError)
+def permission_error(err):
+    """Handles PermissionError"""
+    logger.error(err)
+    return compose_error_message("Internal Server Error", 500)
+
+
+@api.errorhandler(FileNotFoundError)
+def file_not_found(err):
+    """Handles FileNotFoundError"""
+    logger.error(err)
+    return compose_error_message(err, 404)
 
 
 @api.errorhandler(TransactionException)
 def handle_exception(err):
     """Handles TransactionException"""
-    return f"Message: {err}", 400
+    logger.error(err)
+    return compose_error_message(err, 400)
 
 
 @api.route("/")
@@ -44,10 +73,10 @@ def health():
 def transfer(sender, receiver, amount: float):
     """Ensures transfer between 2 accounts of given money"""
     file_connector = FileConnector()
-    customer_sender = file_connector.read(sender)
-    customer_receiver = file_connector.read(receiver)
     updated_sender, updated_receiver = Transaction.transfer(
-        customer_sender, customer_receiver, float(amount)
+        file_connector.read(sender),
+        file_connector.read(receiver),
+        float(amount),
     )
     file_connector.update(updated_sender)
     file_connector.update(updated_receiver)

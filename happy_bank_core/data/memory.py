@@ -11,7 +11,6 @@ class MemoryConnector(Connector):
     """MemoryConnector class that inherits from parent Connector class"""
 
     def __init__(self):
-        super().__init__()
         self.accounts = {
             "id321": Account("id321", "Johan Doe", 1000),
             "id123": Account("id123", "John Doe", 1000),
@@ -25,9 +24,13 @@ class MemoryConnector(Connector):
             return self.accounts[account_id]
         except KeyError as err:
             logger.error(err)
-            return None
+            raise err
 
     def update(self, account):
         """Updates an existing account"""
-        self.accounts[account.id] = account
-        logger.info(self.accounts[account.id])
+        try:
+            self.accounts[account.id] = account
+            logger.info(self.accounts[account.id])
+        except KeyError as err:
+            logger.error(err)
+            raise err
