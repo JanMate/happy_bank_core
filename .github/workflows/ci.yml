@@ -65,11 +65,9 @@ jobs:
           python -m poetry run flake8 . --exclude .venv --count --exit-zero --max-complexity=10 --max-line-length=100 --statistics
           
       - name: Check python code format
-        uses: psf/black@stable
+        uses: jpetrucciani/black-check@master
         with:
-          options: "--check --diff --verbose"
-          src: "./happy_bank_core"
-          version: "21.5b1"
+          path: './happy_bank_core'
 
       - name: Docker Lint
         uses: luke142367/Docker-Lint-Action@v1.1.1
