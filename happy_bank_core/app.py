@@ -5,9 +5,10 @@ Represents REST Api layer.
 """
 import logging
 import json
-from flask import Flask
+from flask import Flask, request
 
 from happy_bank_core.logic.transaction import Transaction, TransactionException
+from happy_bank_core.logic.registration import Registration
 from happy_bank_core.data.file_connector import FileConnector
 from happy_bank_core.config.log import setup_logging
 
@@ -27,6 +28,20 @@ def page_not_found(err):
     """Handles 404 NotFound error"""
     logger.error(err)
     return compose_error_message(err, 404)
+
+
+@api.errorhandler(ValueError)
+def value_error(err):
+    """Handles ValueError"""
+    logger.error(err)
+    return compose_error_message("Received empty string instead of fullname", 400)
+
+
+@api.errorhandler(TypeError)
+def type_error(err):
+    """Handles TypeError"""
+    logger.error(err)
+    return compose_error_message("Incorrect data type, expected: str", 400)
 
 
 @api.errorhandler(KeyError)
@@ -67,6 +82,24 @@ def welcome_page():
 def health():
     """Returns health status"""
     return "Happy Bank Core app is up and running.", 200
+
+
+@api.route("/registration", methods=["POST"])
+def registration():
+    """Creates new account"""
+    content_type = request.headers.get("Content-Type")
+    if content_type == "application/json":
+        json_data = request.json
+        account = Registration.register(json_data)
+        file_connector = FileConnector()
+        file_connector.update(account)
+        return (
+            "You have successfully registered",
+            200,
+            {"Content-Type": "application/json"},
+        )
+    else:
+        return "Content-Type not supported!", 400
 
 
 @api.route("/transfer/<sender>/<receiver>/<amount>")
