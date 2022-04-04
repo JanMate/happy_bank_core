@@ -14,15 +14,11 @@ class Registration:
     def register(data: dict) -> Account:
         """register method that gets dict and returns Account obj"""
         try:
-            if len(data["fullname"]) == 0:
-                logger.error("Received empty string instead of fullname")
+            if not data["fullname"] or not isinstance(data["fullname"], str):
+                logger.error("Received empty string or incorrect data type instead of fullname")
                 raise ValueError
-            else:
-                account_id = random.randint(100, 1000)
-                return Account(str(account_id), data["fullname"], 0)
-        except TypeError as err:
-            logger.error("Incorrect data type, expected: str")
-            raise err
+            account_id = random.randint(100, 1000)
+            return Account(str(account_id), data["fullname"], 0)
         except KeyError as err:
             logger.error("Fullname key not found")
             raise err
