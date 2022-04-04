@@ -25,7 +25,7 @@ class TestRegistration:
         assert result.name == expected_name
         assert result.deposit == 0
 
-    def test_if_register_method_raises_value_error(self):
+    def test_if_register_method_raises_value_error_with_empty_str(self):
         """Tests if register method raises ValueError"""
         # Given
         self.test_data["fullname"] = ""
@@ -35,14 +35,14 @@ class TestRegistration:
         with pytest.raises(ValueError):
             Registration.register(self.test_data)
 
-    def test_if_register_method_raises_type_error(self):
-        """Tests if register method raises TypeError"""
+    def test_if_register_method_raises_value_error_with_int(self):
+        """Tests if register method raises ValueError"""
         # Given
         self.test_data["fullname"] = 1
 
         # When
         # Then
-        with pytest.raises(TypeError):
+        with pytest.raises(ValueError):
             Registration.register(self.test_data)
 
     def test_if_register_method_raises_key_error(self):
