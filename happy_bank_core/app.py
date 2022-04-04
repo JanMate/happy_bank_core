@@ -34,14 +34,9 @@ def page_not_found(err):
 def value_error(err):
     """Handles ValueError"""
     logger.error(err)
-    return compose_error_message("Received empty string instead of fullname", 400)
-
-
-@api.errorhandler(TypeError)
-def type_error(err):
-    """Handles TypeError"""
-    logger.error(err)
-    return compose_error_message("Incorrect data type, expected: str", 400)
+    return compose_error_message(
+        "Received empty string or incorrect data type instead of fullname", 400
+    )
 
 
 @api.errorhandler(KeyError)
@@ -98,8 +93,7 @@ def registration():
             200,
             {"Content-Type": "application/json"},
         )
-    else:
-        return "Content-Type not supported!", 400
+    return "Content-Type not supported!", 400
 
 
 @api.route("/transfer/<sender>/<receiver>/<amount>")
